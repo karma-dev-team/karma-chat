@@ -13,7 +13,7 @@ edition = "2021"
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
 name = "karma_chat_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
-rustc-wrapper = "sccache"
+# rustc-wrapper = "sccache"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -25,12 +25,15 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 [profile.dev]
-incremental = true         # быстрее при правках
-debug        = 1
+incremental = true
+codegen-units = 16      # Параллелизация компиляции
+split-debuginfo = "unpacked"  # Ускоряет линковку (Linux)
+debug = 1
 overflow-checks = false
+opt-level = 1           # Базовые оптимизации для разработки
 
 [profile.release]
-lto             = "thin"   # быстрая линковка
-codegen-units   = 1
-strip           = true
-
+lto = "thin"
+codegen-units = 16      # Баланс скорости и оптимизаций
+strip = true
+opt-level = 3

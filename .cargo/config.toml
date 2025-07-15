@@ -1,5 +1,12 @@
 [build]
+# Включаем sccache для кэширования компиляции
 rustc-wrapper = "sccache"
 
+# Настройки для Linux (Fedora)
 [target.x86_64-unknown-linux-gnu]
-rustflags = ["-C", "link-arg=-fuse-ld=mold"]
+linker = "clang"        # Используем clang как фронтенд
+rustflags = ["-C", "link-arg=-fuse-ld=mold"]  # Указываем mold как линкер
+
+# Настройки для Windows (MSVC)
+[target.x86_64-pc-windows-msvc]
+linker = "lld-link"     # Используем LLD для ускоренной линковки
